@@ -1,0 +1,74 @@
+#include <iostream>
+
+// Simulation parameters
+const int MAX_BATTERY_CAPACITY = 100;  // Battery capacity in percentage
+const int MIN_BATTERY_CAPACITY = 20;   // Minimum battery capacity before switching to grid
+const int SOLAR_CHARGE_RATE = 10;      // Solar charge rate per cycle
+const int LOAD_DISCHARGE_RATE = 5;     // Load discharge rate per cycle
+
+// Battery management system class
+class BatteryManagementSystem {
+public:
+    int batteryLevel;
+
+    BatteryManagementSystem(int initialLevel) : batteryLevel(initialLevel) {}
+
+    void chargeBattery() {
+        if (batteryLevel < MAX_BATTERY_CAPACITY) {
+            batteryLevel += SOLAR_CHARGE_RATE;
+            if (batteryLevel > MAX_BATTERY_CAPACITY) {
+                batteryLevel = MAX_BATTERY_CAPACITY;
+            }
+            std::cout << "Battery charging... Current level: " << batteryLevel << "%" << std::endl;
+        } else {
+            std::cout << "Battery fully charged." << std::endl;
+        }
+    }
+
+    void dischargeBattery() {
+        if (batteryLevel > 0) {
+            batteryLevel -= LOAD_DISCHARGE_RATE;
+            if (batteryLevel < 0) {
+                batteryLevel = 0;
+            }
+            std::cout << "Battery discharging... Current level: " << batteryLevel << "%" << std::endl;
+        } else {
+            std::cout << "Battery empty." << std::endl;
+        }
+    }
+};
+
+// Automatic transfer switch class
+class AutomaticTransferSwitch {
+public:
+    bool usingSolar;
+
+    AutomaticTransferSwitch() : usingSolar(true) {}
+
+    void checkAndSwitch(BatteryManagementSystem& bms) {
+        if (bms.batteryLevel <= MIN_BATTERY_CAPACITY) {
+            usingSolar = false;
+            std::cout << "Switching to grid power..." << std::endl;
+        } else if (bms.batteryLevel > MIN_BATTERY_CAPACITY) {
+            usingSolar = true;
+            std::cout << "Switching to solar power..." << std::endl;
+        }
+    }
+};
+
+int main() {
+    // Initialize BMS with 50% battery level
+    BatteryManagementSystem bms(50);
+    AutomaticTransferSwitch ats;
+
+    for (int i = 0; i < 20; i++) {
+        if (ats.usingSolar) {
+            bms.chargeBattery();
+        } else {
+            bms.dischargeBattery();
+        }
+        ats.checkAndSwitch(bms);
+    }
+
+    return 0;
+}
