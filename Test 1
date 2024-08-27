@@ -1,12 +1,10 @@
 #include <iostream>
 
-// Simulation parameters
-const int MAX_BATTERY_CAPACITY = 100;  // Battery capacity in percentage
-const int MIN_BATTERY_CAPACITY = 20;   // Minimum battery capacity before switching to grid
-const int SOLAR_CHARGE_RATE = 10;      // Solar charge rate per cycle
-const int LOAD_DISCHARGE_RATE = 5;     // Load discharge rate per cycle
+const int MAX_BATTERY_CAPACITY = 80; 
+const int MIN_BATTERY_CAPACITY = 20; 
+const int SOLAR_CHARGE_RATE = 10;   
+const int LOAD_DISCHARGE_RATE = 5;   
 
-// Battery management system class
 class BatteryManagementSystem {
 public:
     int batteryLevel;
@@ -38,7 +36,6 @@ public:
     }
 };
 
-// Automatic transfer switch class
 class AutomaticTransferSwitch {
 public:
     bool usingSolar;
@@ -57,7 +54,7 @@ public:
 };
 
 int main() {
-    // Initialize BMS with 50% battery level
+
     BatteryManagementSystem bms(50);
     AutomaticTransferSwitch ats;
 
