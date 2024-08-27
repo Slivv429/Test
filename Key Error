@@ -1,2 +1,0 @@
-my_dict = {"name": "John"}
-print(my_dict["age"])
