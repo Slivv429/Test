@@ -1,71 +1,52 @@
-#include <iostream>
+class BatteryManagementSystem:
+    def __init__(self, initial_level):
+        self.battery_level = initial_level
+        self.MAX_BATTERY_CAPACITY = 100  # Battery capacity in percentage
+        self.SOLAR_CHARGE_RATE = 10      # Solar charge rate per cycle
+        self.LOAD_DISCHARGE_RATE = 5     # Load discharge rate per cycle
 
-const int MAX_BATTERY_CAPACITY = 80; 
-const int MIN_BATTERY_CAPACITY = 20; 
-const int SOLAR_CHARGE_RATE = 10;   
-const int LOAD_DISCHARGE_RATE = 5;   
+    def charge_battery(self):
+        if self.battery_level < self.MAX_BATTERY_CAPACITY:
+            self.battery_level += self.SOLAR_CHARGE_RATE
+            if self.battery_level > self.MAX_BATTERY_CAPACITY:
+                self.battery_level = self.MAX_BATTERY_CAPACITY
+            print(f"Battery charging... Current level: {self.battery_level}%")
+        else:
+            print("Battery fully charged.")
 
-class BatteryManagementSystem {
-public:
-    int batteryLevel;
+    def discharge_battery(self):
+        if self.battery_level > 0:
+            self.battery_level -= self.LOAD_DISCHARGE_RATE
+            if self.battery_level < 0:
+                self.battery_level = 0
+            print(f"Battery discharging... Current level: {self.battery_level}%")
+        else:
+            print("Battery empty.")
 
-    BatteryManagementSystem(int initialLevel) : batteryLevel(initialLevel) {}
+class AutomaticTransferSwitch:
+    def __init__(self):
+        self.using_solar = True
+        self.MIN_BATTERY_CAPACITY = 20  # Minimum battery capacity before switching to grid
 
-    void chargeBattery() {
-        if (batteryLevel < MAX_BATTERY_CAPACITY) {
-            batteryLevel += SOLAR_CHARGE_RATE;
-            if (batteryLevel > MAX_BATTERY_CAPACITY) {
-                batteryLevel = MAX_BATTERY_CAPACITY;
-            }
-            std::cout << "Battery charging... Current level: " << batteryLevel << "%" << std::endl;
-        } else {
-            std::cout << "Battery fully charged." << std::endl;
-        }
-    }
+    def check_and_switch(self, bms):
+        if bms.battery_level <= self.MIN_BATTERY_CAPACITY:
+            self.using_solar = False
+            print("Switching to grid power...")
+        elif bms.battery_level > self.MIN_BATTERY_CAPACITY:
+            self.using_solar = True
+            print("Switching to solar power...")
 
-    void dischargeBattery() {
-        if (batteryLevel > 0) {
-            batteryLevel -= LOAD_DISCHARGE_RATE;
-            if (batteryLevel < 0) {
-                batteryLevel = 0;
-            }
-            std::cout << "Battery discharging... Current level: " << batteryLevel << "%" << std::endl;
-        } else {
-            std::cout << "Battery empty." << std::endl;
-        }
-    }
-};
+def main():
+    # Initialize BMS with 50% battery level
+    bms = BatteryManagementSystem(50)
+    ats = AutomaticTransferSwitch()
 
-class AutomaticTransferSwitch {
-public:
-    bool usingSolar;
+    for i in range(20):
+        if ats.using_solar:
+            bms.charge_battery()
+        else:
+            bms.discharge_battery()
+        ats.check_and_switch(bms)
 
-    AutomaticTransferSwitch() : usingSolar(true) {}
-
-    void checkAndSwitch(BatteryManagementSystem& bms) {
-        if (bms.batteryLevel <= MIN_BATTERY_CAPACITY) {
-            usingSolar = false;
-            std::cout << "Switching to grid power..." << std::endl;
-        } else if (bms.batteryLevel > MIN_BATTERY_CAPACITY) {
-            usingSolar = true;
-            std::cout << "Switching to solar power..." << std::endl;
-        }
-    }
-};
-
-int main() {
-
-    BatteryManagementSystem bms(50);
-    AutomaticTransferSwitch ats;
-
-    for (int i = 0; i < 20; i++) {
-        if (ats.usingSolar) {
-            bms.chargeBattery();
-        } else {
-            bms.dischargeBattery();
-        }
-        ats.checkAndSwitch(bms);
-    }
-
-    return 0;
-}
+if __name__ == "__main__":
+    main()
